@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Range(0, 20)]
     [SerializeField] private float _speed = 5.0f;
+    [Range(0, 50)]
     [SerializeField] private float _turnSpeed = 2.0f;
-    [SerializeField] private float _horizontalInput;
-    [SerializeField] private float _forwardInput;
+    private float horizontalInput;
+    private float forwardInput;
     
     // Update is called once per frame
     void Update()
     {
-        _horizontalInput = Input.GetAxis("Horizontal");
-        _forwardInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxis("Horizontal");
+        forwardInput = Input.GetAxis("Vertical");
         
-        transform.Translate(Vector3.forward * Time.deltaTime * _speed * _forwardInput);
-        transform.Rotate(Vector3.up, _turnSpeed * _horizontalInput * Time.deltaTime);
+        transform.Translate(Vector3.forward * Time.deltaTime * _speed * forwardInput);
+        transform.Rotate(Vector3.up, _turnSpeed * horizontalInput * Time.deltaTime);
     }
 }
