@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,10 +9,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed = 5.0f;
     [Range(0, 50)]
     [SerializeField] private float _turnSpeed = 2.0f;
-    public T<PlayerInputActions> inputActions = null;
+    //public T<PlayerInputActions> inputActions = null;
     private PlayerInputActions playerInputActions;
     private InputAction movement;
-    
+    [SerializeField] private ControlsForPlayer controlsForPlayer;
+
+    private enum ControlsForPlayer
+    {
+        Player1,
+        Player2
+    }
+
+
     private void Awake()
     {
         playerInputActions = new();
@@ -22,8 +31,23 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        movement = playerInputActions.Player1.Movement;
+        movement = ChoosePlayer();
         movement.Enable();
+    }
+
+    private InputAction ChoosePlayer()
+    {
+        if (controlsForPlayer == ControlsForPlayer.Player1)
+        {
+            return playerInputActions.Player1.Movement;
+        }
+
+        if (controlsForPlayer == ControlsForPlayer.Player2)
+        {
+            return playerInputActions.Player2.Movement;
+        }
+
+        return playerInputActions.Player1.Movement;
     }
 
     /// <summary>
