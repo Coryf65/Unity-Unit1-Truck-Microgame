@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _speed = 5.0f;
     [Range(0, 50)]
     [SerializeField] private float _turnSpeed = 2.0f;
+    public T<PlayerInputActions> inputActions = null;
     private PlayerInputActions playerInputActions;
     private InputAction movement;
     
