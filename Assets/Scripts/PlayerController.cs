@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     //public T<PlayerInputActions> inputActions = null;
     private PlayerInputActions playerInputActions;
     private InputAction movement;
+    [Tooltip("Select which control scheme will be used to control this player")]
     [SerializeField] private ControlsForPlayer controlsForPlayer;
 
     private enum ControlsForPlayer
@@ -19,7 +20,6 @@ public class PlayerController : MonoBehaviour
         Player1,
         Player2
     }
-
 
     private void Awake()
     {
@@ -31,23 +31,24 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        movement = ChoosePlayer();
+        movement = ChoosePlayerControls();
         movement.Enable();
     }
 
-    private InputAction ChoosePlayer()
+    /// <summary>
+    /// Selects which Input Map will be used based on the Unity Editor selection
+    /// </summary>
+    /// <returns>a InputAction for which players controls to use, defaults to Player 1 if none selected</returns>
+    private InputAction ChoosePlayerControls()
     {
-        if (controlsForPlayer == ControlsForPlayer.Player1)
-        {
-            return playerInputActions.Player1.Movement;
-        }
-
+        InputAction inputAction = playerInputActions.Player1.Movement;
+        
         if (controlsForPlayer == ControlsForPlayer.Player2)
         {
-            return playerInputActions.Player2.Movement;
+            inputAction = playerInputActions.Player2.Movement;
         }
 
-        return playerInputActions.Player1.Movement;
+        return inputAction;
     }
 
     /// <summary>

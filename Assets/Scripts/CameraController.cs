@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -9,20 +10,41 @@ public class CameraController : MonoBehaviour
 
     [Tooltip("Offset Camera view from player vehicle")]
     public Vector3 cameraOffset = new Vector3(0, 0, 0);
+    [Tooltip("Select which control scheme will be used to control this player")]
+    [SerializeField] private ControlsForPlayer controlsForPlayer;
+    
+    private enum ControlsForPlayer
+    {
+        Player1,
+        Player2
+    }
+
+    private void Start()
+    {
+        if (controlsForPlayer == ControlsForPlayer.Player1)
+        {
+            _firstPersonCamera.rect = new Rect(-0.5f, 0f, 1f, 1f);
+            _thirdPersonCamera.rect = new Rect(-0.5f, 0f, 1f, 1f);
+        }
+        
+        if (controlsForPlayer == ControlsForPlayer.Player2)
+        {
+            _firstPersonCamera.rect = new Rect(0.5f, 0f, 1f, 1f);
+            _thirdPersonCamera.rect = new Rect(0.5f, 0f, 1f, 1f);
+        }
+        
+    }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (controlsForPlayer == ControlsForPlayer.Player1 && Input.GetKeyDown(KeyCode.C))
         {
-            // which camera is enabled 
-            if (_firstPersonCamera.enabled)
-            {
-                ToggleCamera(_thirdPersonCamera, _firstPersonCamera);
-            }
-            else
-            {
-                ToggleCamera(_firstPersonCamera, _thirdPersonCamera);
-            }
+            ToggleCameraView();
+        }
+        
+        if (controlsForPlayer == ControlsForPlayer.Player2 && Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            ToggleCameraView();
         }
     }
 
@@ -37,9 +59,18 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="viewToUse">Camera perspective to enable</param>
     /// <param name="viewToHide">Camera perspective to hide</param>
-    private void ToggleCamera(Camera viewToUse, Camera viewToHide)
+    private void ToggleCameraView()
     {
-        viewToUse.enabled = true;
-        viewToHide.enabled = false;
+        // which camera is enabled 
+        if (_firstPersonCamera.enabled)
+        {
+            _thirdPersonCamera.enabled = true;
+            _firstPersonCamera.enabled = false;
+        }
+        else
+        {
+            _thirdPersonCamera.enabled = false;
+            _firstPersonCamera.enabled = true;
+        }
     }
 }
